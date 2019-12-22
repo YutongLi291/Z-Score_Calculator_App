@@ -29,7 +29,8 @@ public class GradesApi {
     String faculty;  //usually 4 capital letters
     String courseNumber; //3 digits
     String myScore; //a two digit percentage
-    Integer zscore;
+    Double zscore;
+    double myScoreDouble;
 
 
 
@@ -37,6 +38,7 @@ public class GradesApi {
         this.faculty = faculty;
         this.courseNumber = courseNumber;
         this.myScore = myScore;
+        myScoreDouble = Double.parseDouble(myScore);
     }
 
     //Modifies: this
@@ -96,7 +98,8 @@ public class GradesApi {
         System.out.println("The course average is  " + classAverage);
         Object standardDeviation = statsObject.get("stdev");
         System.out.println("The course standard deviation is " + standardDeviation);
-        return (double) classAverage;
+        zscore = (myScoreDouble - ((double) classAverage)) / ((double)standardDeviation);
+        return zscore;
     }
 
     public void setFaculty(String faculty) {
