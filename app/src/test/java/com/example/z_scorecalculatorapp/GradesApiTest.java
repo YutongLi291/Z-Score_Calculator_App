@@ -25,7 +25,7 @@ public class GradesApiTest {
     public void getAverageTest() {
         GradesApi gradesApi = new GradesApi("MATH", "100", "80");
         try {
-            assertEquals(69.64, gradesApi.searchCourseThenGetAverage(), 0.5 );
+            assertEquals(0.69, gradesApi.searchCourseThenGetAverage(), 0.5 );
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
