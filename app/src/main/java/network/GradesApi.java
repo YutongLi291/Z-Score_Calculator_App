@@ -5,9 +5,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedReader;
@@ -15,40 +13,48 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.text.ParseException;
+
+;
+
 
 //copied from cpsc210 deliverable 10 webpage
 public class GradesApi {
 
-    private static final String appId = "1911afbd";
-    private static final String apikey = "9020687e5b60151299027fe80f9c35d1";
-    private static final String partOneQuery = "https://ubcgrades.com/api/grades/";
-    private static final String partTwoQuery = "?results=0%3A1&cal_min=0&cal_max=50000&fields=nf_calories&appId=";
-    private static final String partThreeQuery = "&appKey=";
-    String faculty;
-    String courseNumber;
-    Integer myScore;
+    private static final String partOneQuery = "https://ubcgrades.com/api/grades/2018W/";
+    String theUrl;
+
+    String faculty;  //usually 4 capital letters
+    String courseNumber; //3 digits
+    String myScore; //a two digit percentage
     Integer zscore;
-    //    static String theURL = partOneQuery + search + partTwoQuery + appId + partThreeQuery + apikey;
 
 
-    public GradesApi (String search) {
-        this.search = search;
+
+    public GradesApi (String faculty, String courseNumber, String myScore ) {
+        this.faculty = faculty;
+        this.courseNumber = courseNumber;
+        this.myScore = myScore;
     }
 
     //Modifies: this
     //Effects: gets calories back from a food search of keywords
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void searchFoodThenGetCalories() throws MalformedURLException, IOException, ParseException {
+    public double searchCourseThenGetAverage() throws MalformedURLException, IOException, ParseException {
 
         BufferedReader br = null;
 
 
         try {
 
-            theUrl = partOneQuery + search + partTwoQuery + appId + partThreeQuery + apikey;
+            theUrl = partOneQuery + faculty + "/" + courseNumber;
             URL url = new URL(theUrl);
-            br = new BufferedReader(new InputStreamReader(url.openStream()));
+            URLConnection urlc = url.openConnection();
+            urlc.setRequestProperty("User-Agent", "Mozilla 5.0 (Windows; U; "
+                    + "Windows NT 5.1; en-US; rv:1.8.0.11) ");
+            br = new BufferedReader(new InputStreamReader((urlc.getInputStream()), Charset.forName("UTF-8")));
 
             String line;
 
@@ -59,40 +65,46 @@ public class GradesApi {
                 sb.append(line);
                 sb.append(System.lineSeparator());
             }
-            getCalorieCount(sb);
+            return getzScore(sb);
+        } catch (org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+
         } finally {
 
             if (br != null) {
                 br.close();
             }
         }
-    }
+  return 0;  }
 
-    public  void getCalorieCount(StringBuilder sb) throws org.json.simple.parser.ParseException, JSONException {
+    public  double getzScore(StringBuilder sb) throws org.json.simple.parser.ParseException{
         String result = sb.toString();
 
         JSONParser jsonParser = new JSONParser();
         Object obj = jsonParser.parse(result);
-        JSONObject jsonObject = (JSONObject) obj;
+//        JSONObject jsonObject = (JSONObject) obj;
 
-        Object hits = jsonParser.parse((jsonObject.get("hits")).toString());
-        JSONArray hitsArray = (JSONArray) hits;
-        Object hitsObject = hitsArray.get(0);
-        JSONObject hitsjsonobject = (JSONObject) hitsObject;
+        Object all = jsonParser.parse(obj.toString());
+        org.json.simple.JSONArray allArray = (org.json.simple.JSONArray) all;
+        Object gradesObject = allArray.get(allArray.size() - 1);
+        JSONObject gradeJsonObject = (JSONObject) gradesObject;
 
-        Object fields = hitsjsonobject.get("fields");
-        fields = jsonParser.parse(fields.toString());
-        JSONObject fieldsObject = (JSONObject) fields;
-        Object calorieCount = fieldsObject.get("nf_calories");
-        System.out.println("The calorie count is " + calorieCount);
+        Object stats = gradeJsonObject.get("stats");
+        stats = jsonParser.parse(stats.toString());
+        JSONObject statsObject = (JSONObject) stats;
+        Object classAverage = statsObject.get("average");
+        System.out.println("The course average is  " + classAverage);
+        Object standardDeviation = statsObject.get("stdev");
+        System.out.println("The course standard deviation is " + standardDeviation);
+        return (double) classAverage;
     }
 
-    public void setSearch(String search) {
-        this.search = search;
+    public void setFaculty(String faculty) {
+        this.faculty = faculty;
     }
 
-    public String getSearch() {
-        return search;
+    public String getFaculty() {
+        return faculty;
     }
 }
 
