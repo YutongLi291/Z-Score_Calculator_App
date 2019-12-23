@@ -35,7 +35,7 @@ public class GradesApi {
 
 
     public GradesApi (String faculty, String courseNumber, String myScore ) {
-        this.faculty = faculty;
+        this.faculty = faculty.toUpperCase();
         this.courseNumber = courseNumber;
         this.myScore = myScore;
         myScoreDouble = Double.parseDouble(myScore);
