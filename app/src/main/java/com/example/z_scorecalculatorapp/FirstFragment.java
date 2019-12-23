@@ -72,6 +72,7 @@ public class FirstFragment extends Fragment {
                         .navigate(action);
             }
 
+            //TODO: fix the crash when no input
             private void errorPopup() {
                 AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
             }

@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 public class SecondFragment extends Fragment {
-
+    ///TODO : Add display of average of the course, standard deviation, and how much more people approx you are better than.
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,

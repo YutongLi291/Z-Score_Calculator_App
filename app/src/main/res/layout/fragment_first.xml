@@ -37,8 +37,8 @@
 
     <EditText
         android:id="@+id/score_field"
-        android:layout_width="134dp"
-        android:layout_height="35dp"
+        android:layout_width="130dp"
+        android:layout_height="27dp"
         android:layout_marginBottom="36dp"
         android:autofillHints="faculty"
         android:background="#FBEDED"
@@ -54,8 +54,8 @@
 
     <EditText
         android:id="@+id/courseNumber_field"
-        android:layout_width="162dp"
-        android:layout_height="56dp"
+        android:layout_width="154dp"
+        android:layout_height="34dp"
         android:layout_marginStart="232dp"
         android:layout_marginLeft="232dp"
         android:layout_marginTop="164dp"
@@ -72,8 +72,8 @@
 
     <EditText
         android:id="@+id/faculty_field"
-        android:layout_width="162dp"
-        android:layout_height="56dp"
+        android:layout_width="154dp"
+        android:layout_height="34dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="164dp"
