@@ -1,5 +1,6 @@
 package com.example.z_scorecalculatorapp;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +22,13 @@ public class SecondFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_second, container, false);
     }
 
+    @SuppressLint("StringFormatMatches")
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String myArg = SecondFragmentArgs.fromBundle(getArguments()).getMyArg();
-        TextView textView = view.findViewById(R.id.textview_second);
-        textView.setText(getString(R.string.hello_second_fragment, myArg));
+        double myArg = SecondFragmentArgs.fromBundle(getArguments()).getMyArg();
+        TextView textView = view.findViewById(R.id.zscore_display);
+        textView.setText(getString(R.string.zscore_display, myArg));
 
         view.findViewById(R.id.button_second).setOnClickListener(new View.OnClickListener() {
             @Override

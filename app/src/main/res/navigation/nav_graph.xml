@@ -27,6 +27,6 @@
 
         <argument
             android:name="myArg"
-            app:argType="string" />
+            app:argType="java.lang.Double" />
     </fragment>
 </navigation>

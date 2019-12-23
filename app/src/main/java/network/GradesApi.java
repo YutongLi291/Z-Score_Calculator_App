@@ -2,11 +2,13 @@ package network;
 
 
 import android.os.Build;
+import android.os.StrictMode;
 
 import androidx.annotation.RequiresApi;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +17,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.text.ParseException;
 
 ;
 
@@ -39,12 +40,15 @@ public class GradesApi {
         this.courseNumber = courseNumber;
         this.myScore = myScore;
         myScoreDouble = Double.parseDouble(myScore);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
     }
 
     //Modifies: this
     //Effects: gets calories back from a food search of keywords
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public double searchCourseThenGetAverage() throws MalformedURLException, IOException, ParseException {
+    public double searchCourseThenGetZscore()  {
 
         BufferedReader br = null;
 
@@ -52,32 +56,50 @@ public class GradesApi {
         try {
 
             theUrl = partOneQuery + faculty + "/" + courseNumber;
-            URL url = new URL(theUrl);
-            URLConnection urlc = url.openConnection();
+            URL url = null;
+            try {
+                url = new URL(theUrl);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            URLConnection urlc = null;
+            try {
+                urlc = url.openConnection();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             urlc.setRequestProperty("User-Agent", "Mozilla 5.0 (Windows; U; "
                     + "Windows NT 5.1; en-US; rv:1.8.0.11) ");
-            br = new BufferedReader(new InputStreamReader((urlc.getInputStream()), Charset.forName("UTF-8")));
 
-            String line;
+                br = new BufferedReader(new InputStreamReader((urlc.getInputStream()), Charset.forName("UTF-8")));
+
+            String line = null;
 
             StringBuilder sb = new StringBuilder();
 
             while ((line = br.readLine()) != null) {
 
+
+
                 sb.append(line);
                 sb.append(System.lineSeparator());
             }
             return getzScore(sb);
-        } catch (org.json.simple.parser.ParseException e) {
+        } catch (ParseException | IOException e) {
             e.printStackTrace();
 
         } finally {
 
             if (br != null) {
-                br.close();
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
   return 0;  }
+
 
     public  double getzScore(StringBuilder sb) throws org.json.simple.parser.ParseException{
         String result = sb.toString();

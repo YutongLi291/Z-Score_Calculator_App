@@ -2,12 +2,9 @@ package com.example.z_scorecalculatorapp;
 
 import org.junit.Test;
 
-import java.io.IOException;
-import java.text.ParseException;
-
 import network.GradesApi;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -24,12 +21,6 @@ public class GradesApiTest {
     @Test
     public void getAverageTest() {
         GradesApi gradesApi = new GradesApi("MATH", "100", "80");
-        try {
-            assertEquals(0.69, gradesApi.searchCourseThenGetAverage(), 0.5 );
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        assertEquals(0.69, gradesApi.searchCourseThenGetZscore(), 0.5 );
     }
 }
