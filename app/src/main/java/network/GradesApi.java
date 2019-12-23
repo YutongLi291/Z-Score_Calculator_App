@@ -13,7 +13,6 @@ import org.json.simple.parser.ParseException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
@@ -48,30 +47,28 @@ public class GradesApi {
     //Modifies: this
     //Effects: gets calories back from a food search of keywords
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public double searchCourseThenGetZscore()  {
+    public double searchCourseThenGetZscore() throws IOException, ParseException {
 
         BufferedReader br = null;
 
 
-        try {
+
 
             theUrl = partOneQuery + faculty + "/" + courseNumber;
             URL url = null;
-            try {
+
                 url = new URL(theUrl);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+
             URLConnection urlc = null;
-            try {
+
                 urlc = url.openConnection();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
             urlc.setRequestProperty("User-Agent", "Mozilla 5.0 (Windows; U; "
                     + "Windows NT 5.1; en-US; rv:1.8.0.11) ");
 
-                br = new BufferedReader(new InputStreamReader((urlc.getInputStream()), Charset.forName("UTF-8")));
+                br = new BufferedReader(new InputStreamReader((urlc.getInputStream())
+                        , Charset.forName("UTF-8")
+                ));
 
             String line = null;
 
@@ -84,21 +81,17 @@ public class GradesApi {
                 sb.append(line);
                 sb.append(System.lineSeparator());
             }
-            return getzScore(sb);
-        } catch (ParseException | IOException e) {
-            e.printStackTrace();
+        if (br != null) {
+            br.close();
 
-        } finally {
-
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
-  return 0;  }
+            return getzScore(sb);
+
+
+
+
+    }
+
 
 
     public  double getzScore(StringBuilder sb) throws org.json.simple.parser.ParseException{
