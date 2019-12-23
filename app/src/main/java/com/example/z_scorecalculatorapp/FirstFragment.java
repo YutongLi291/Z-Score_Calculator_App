@@ -5,10 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+
+import network.GradesApi;
 
 public class FirstFragment extends Fragment {
 
@@ -16,6 +19,7 @@ public class FirstFragment extends Fragment {
     EditText scoreEntered;
     EditText facultyEntered;
     EditText courseNumberEntered;
+    GradesApi gradesApi;
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -28,17 +32,20 @@ public class FirstFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Spinner facultyDropdown = view.findViewById(R.id.select_course)
 
 
         view.findViewById(R.id.calculate_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                  scoreEntered = view.findViewById(R.id.score_field);
-                Integer myScore = Integer.parseInt(scoreEntered.getText().toString());
-                 facultyEntered = view.findViewById(R.id.faculty_field);
+                String myScore = (scoreEntered.getText().toString());
+                 facultyEntered = view.findViewById(R.id.select_course);
                 String theFaculty = facultyEntered.getText().toString();
                 courseNumberEntered = view.findViewById(R.id.courseNumber_field);
-                Integer courseNumber = Integer.parseInt(courseNumberEntered.getText().toString());
+                String courseNumber = (courseNumberEntered.getText().toString());
+                gradesApi = new GradesApi(theFaculty, courseNumber, myScore);
+
                 FirstFragmentDirections.ActionFirstFragmentToSecondFragment action =
                         FirstFragmentDirections.
                                 actionFirstFragmentToSecondFragment("From FirstFragment");
