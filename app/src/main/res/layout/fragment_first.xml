@@ -70,17 +70,22 @@
         app:layout_constraintTop_toBottomOf="@+id/first_header"
         app:layout_constraintVertical_bias="0.511" />
 
-    <Spinner
-        android:id="@+id/select_course"
-        android:layout_width="156dp"
+    <EditText
+        android:id="@+id/faculty_field"
+        android:layout_width="162dp"
         android:layout_height="56dp"
-        android:spinnerMode="dropdown"
-        android:background="@android:drawable/btn_dropdown"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="164dp"
+        android:background="#FBEDED"
+        android:ems="10"
+        android:hint="@string/faculty_text"
+        android:inputType="number"
+        android:maxLength="3"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/courseNumber_field"
-        app:layout_constraintHorizontal_bias="0.173"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.813" />
+        app:layout_constraintTop_toBottomOf="@+id/first_header"
+        app:layout_constraintVertical_bias="0.511" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
