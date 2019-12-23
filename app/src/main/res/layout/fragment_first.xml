@@ -56,8 +56,6 @@
         android:id="@+id/courseNumber_field"
         android:layout_width="154dp"
         android:layout_height="34dp"
-        android:layout_marginStart="232dp"
-        android:layout_marginLeft="232dp"
         android:layout_marginTop="164dp"
         android:background="#FBEDED"
         android:ems="10"
@@ -66,9 +64,11 @@
         android:maxLength="3"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.937"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/first_header"
-        app:layout_constraintVertical_bias="0.511" />
+        app:layout_constraintVertical_bias="0.51" />
 
     <EditText
         android:id="@+id/faculty_field"
