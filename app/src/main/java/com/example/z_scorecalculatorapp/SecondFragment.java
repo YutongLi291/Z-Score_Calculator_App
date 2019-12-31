@@ -26,9 +26,10 @@ public class SecondFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        double myArg = SecondFragmentArgs.fromBundle(getArguments()).getMyArg();
+        Bundle myArg = SecondFragmentArgs.fromBundle(getArguments()).getMyArg();
         TextView textView = view.findViewById(R.id.zscore_display);
-        textView.setText(getString(R.string.zscore_display, myArg));
+        textView.setText("Your score is " + myArg.getDouble("zscore") + " standard deviations above the average of "
+                        + myArg.getDouble("classAverage") +"." );
 
         view.findViewById(R.id.button_second).setOnClickListener(new View.OnClickListener() {
             @Override

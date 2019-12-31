@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 ;
 
@@ -24,13 +24,14 @@ import java.nio.charset.Charset;
 public class GradesApi {
 
     private static final String partOneQuery = "https://ubcgrades.com/api/grades/2018W/";
-    String theUrl;
+    private String theUrl;
 
-    String faculty;  //usually 4 capital letters
-    String courseNumber; //3 digits
-    String myScore; //a two digit percentage
-    Double zscore;
+    private String faculty;  //usually 4 capital letters
+    private String courseNumber; //3 digits
+    private String myScore; //a two digit percentage
+    private Double zscore;
     double myScoreDouble;
+    BufferedReader br;
 
 
 
@@ -49,49 +50,51 @@ public class GradesApi {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public double searchCourseThenGetZscore() throws IOException, ParseException {
 
-        BufferedReader br = null;
+        StringBuilder sb;
+        sb = getStringBuilder();
+        return getzScore(sb);
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private StringBuilder getStringBuilder() throws IOException {
+        StringBuilder sb;
+        br = null;
+
+
+        theUrl = partOneQuery + faculty + "/" + courseNumber;
+        URL url = null;
+
+        url = new URL(theUrl);
+
+        URLConnection urlc = null;
+
+        urlc = url.openConnection();
+
+        urlc.setRequestProperty("User-Agent", "Mozilla 5.0 (Windows; U; "
+                + "Windows NT 5.1; en-US; rv:1.8.0.11) ");
+
+        br = new BufferedReader(new InputStreamReader((urlc.getInputStream())
+                , StandardCharsets.UTF_8
+        ));
+
+        String line = null;
+
+        sb = new StringBuilder();
+
+        while ((line = br.readLine()) != null) {
 
 
 
-
-            theUrl = partOneQuery + faculty + "/" + courseNumber;
-            URL url = null;
-
-                url = new URL(theUrl);
-
-            URLConnection urlc = null;
-
-                urlc = url.openConnection();
-
-            urlc.setRequestProperty("User-Agent", "Mozilla 5.0 (Windows; U; "
-                    + "Windows NT 5.1; en-US; rv:1.8.0.11) ");
-
-                br = new BufferedReader(new InputStreamReader((urlc.getInputStream())
-                        , Charset.forName("UTF-8")
-                ));
-
-            String line = null;
-
-            StringBuilder sb = new StringBuilder();
-
-            while ((line = br.readLine()) != null) {
-
-
-
-                sb.append(line);
-                sb.append(System.lineSeparator());
-            }
+            sb.append(line);
+            sb.append(System.lineSeparator());
+        }
         if (br != null) {
             br.close();
 
         }
-            return getzScore(sb);
-
-
-
-
+        return sb;
     }
-
 
 
     public  double getzScore(StringBuilder sb) throws org.json.simple.parser.ParseException{
@@ -123,6 +126,34 @@ public class GradesApi {
 
     public String getFaculty() {
         return faculty;
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public double searchCourseAndGetAverage() throws IOException, ParseException {
+        StringBuilder sb;
+        sb = getStringBuilder();
+        return getAverage(sb);
+    }
+
+    public double getAverage(StringBuilder sb) throws ParseException {
+        String result = sb.toString();
+
+        JSONParser jsonParser = new JSONParser();
+        Object obj = jsonParser.parse(result);
+//        JSONObject jsonObject = (JSONObject) obj;
+
+        Object all = jsonParser.parse(obj.toString());
+        org.json.simple.JSONArray allArray = (org.json.simple.JSONArray) all;
+        Object gradesObject = allArray.get(allArray.size() - 1);
+        JSONObject gradeJsonObject = (JSONObject) gradesObject;
+
+        Object stats = gradeJsonObject.get("stats");
+        stats = jsonParser.parse(stats.toString());
+        JSONObject statsObject = (JSONObject) stats;
+        Object classAverage = statsObject.get("average");
+        System.out.println("The course average is  " + classAverage);
+        return (double) classAverage;
     }
 }
 

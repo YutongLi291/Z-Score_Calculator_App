@@ -1,12 +1,12 @@
 package com.example.z_scorecalculatorapp;
 
-import android.app.AlertDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -21,17 +21,18 @@ import network.GradesApi;
 public class FirstFragment extends Fragment {
 
 
-    EditText scoreField;
-    EditText facultyField ;
-    EditText courseField;
-    GradesApi gradesApi;
+    private EditText scoreField;
+    private EditText facultyField ;
+    private EditText courseField;
+    private GradesApi gradesApi;
+    private View v;
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
         // Inflate the layout for this fragment
-        View v =inflater.inflate(R.layout.fragment_first, container, false);
+         v =inflater.inflate(R.layout.fragment_first, container, false);
          scoreField = v.findViewById(R.id.score_field);
          facultyField = v.findViewById(R.id.faculty_field);
         courseField = v.findViewById(R.id.courseNumber_field);
@@ -47,26 +48,37 @@ public class FirstFragment extends Fragment {
             @Override
             public void onClick(View view) {
 //                 scoreEntered = (EditText)view.findViewById(R.id.score_field);
-                String  myScore =(scoreField.getText().toString());
+                try{String  myScore =(scoreField.getText().toString());
+
 //                 facultyEntered = (EditText)view.findViewById(R.id.faculty_field);
                 String theFaculty =  facultyField.getText().toString();
 //                courseNumberEntered =(EditText) view.findViewById(R.id.courseNumber_field);
                 String courseNumber = (courseField.getText().toString());
-                gradesApi = new GradesApi(theFaculty, courseNumber, myScore);
+                gradesApi = new GradesApi(theFaculty, courseNumber, myScore);}
+                catch (Exception e) {
+                    errorPopup();
+                }
 
 
                 FirstFragmentDirections.ActionFirstFragmentToSecondFragment action =
                         null;
                 double zscore = 0;
+                double classAverage = 0;
+
                 try {
                     zscore = gradesApi.searchCourseThenGetZscore();
+                    classAverage = gradesApi.searchCourseAndGetAverage();
                 } catch (Exception e) {
                    errorPopup();
 
                 }
                 zscore = round(zscore, 2);
+                classAverage = round(classAverage, 2);
+                Bundle args = new Bundle();
+                args.putDouble("zscore", zscore);
+                args.putDouble("classAverage", classAverage);
                     action = FirstFragmentDirections.
-                            actionFirstFragmentToSecondFragment(zscore);
+                            actionFirstFragmentToSecondFragment(args);
 
                 NavHostFragment.findNavController(FirstFragment.this)
                         .navigate(action);
@@ -74,7 +86,7 @@ public class FirstFragment extends Fragment {
 
             //TODO: fix the crash when no input
             private void errorPopup() {
-                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                Toast.makeText(getActivity(), "Please enter valid values!", Toast.LENGTH_SHORT).show();
             }
         });
     }
